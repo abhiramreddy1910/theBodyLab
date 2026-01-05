@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+
 import Home from "./pages/Home.jsx";
 import SignIn from "./pages/SignIn.jsx";
 import SignUp from "./pages/SignUp.jsx";
@@ -13,7 +14,9 @@ import { getSession } from "./lib/storage.js";
 
 function RequireAuth({ children }) {
   const session = getSession();
-  if (!session?.isAuthed) return <Navigate to="/signin" replace />;
+  if (!session || !session.isAuthed) {
+    return <Navigate to="/signin" replace />;
+  }
   return children;
 }
 
@@ -25,7 +28,7 @@ export default function App() {
       <Route path="/signup" element={<SignUp />} />
 
       <Route
-        path="/app"
+        path="/app/*"
         element={
           <RequireAuth>
             <AppShell />
@@ -43,3 +46,4 @@ export default function App() {
     </Routes>
   );
 }
+
